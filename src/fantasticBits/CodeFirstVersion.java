@@ -3,13 +3,10 @@ package fantasticBits;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 class Entidad {
 	int id;
@@ -151,16 +148,16 @@ class Player {
 
 				if (entityType.equals("WIZARD")) {
 
-					Jugador jugador = new Jugador(jugadores.size() + 1, x, y, vx, vy, state);
+					Jugador jugador = new Jugador(jugadores.size(), x, y, vx, vy, state);
 					jugadores.add(jugador);
 
 				} else if (entityType.equals("OPPONENT_WIZARD")) {
 
-					Enemigo enemigo = new Enemigo(enemigos.size() + 1, x, y, vx, vy, state);
+					Enemigo enemigo = new Enemigo(enemigos.size(), x, y, vx, vy, state);
 					enemigos.add(enemigo);
 				} else if (entityType.equals("SNAFFLE")) {
 
-					Snaffle snaffle = new Snaffle(snaffles.size() + 1, x, y, vx, vy);
+					Snaffle snaffle = new Snaffle(snaffles.size(), x, y, vx, vy);
 					snaffles.add(snaffle);
 				}
 			}
@@ -173,28 +170,41 @@ class Player {
 
 				Jugador jugador = jugadores.get(i);
 				Map<Integer, Double> distanciasConIdSnaffle = new HashMap<>();
-				Map<Integer, Double> distanciasConIdSnaffleORDER = new TreeMap<>(Collections.reverseOrder());
+				TreeMap<Integer, Double> distanciasConIdSnaffleORDER = new TreeMap<>(Collections.reverseOrder());
 
 				for (Snaffle snaffle : snaffles) {
 					distanciasConIdSnaffle.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
 					distanciasConIdSnaffleORDER.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
 				}
 
-				Map<Integer, Double> distanciasConIdSnaffleOrdenadas = sortByValue(distanciasConIdSnaffle);
-				int idSnaffleMasCercana = 0;
-				for (Entry<Integer, Double> distanciasConIdSnaffleOrdenadasEntry : distanciasConIdSnaffleOrdenadas
-						.entrySet()) {
-					if (i == 0) {
-						idSnaffleMasCercana = distanciasConIdSnaffleOrdenadasEntry.getKey();
-						System.err.println(
-								"Snaffle más cercana con ID: " + distanciasConIdSnaffleOrdenadasEntry.getKey());
-						System.err.println(
-								"Snaffle más cercana está a: " + distanciasConIdSnaffleOrdenadasEntry.getValue());
+				// TreeMap<Integer, Double> distanciasConIdSnaffleOrdenadas =
+				// sortByValue(distanciasConIdSnaffle);
 
-					}
-					System.err.println("Distancias ordenadas: " + distanciasConIdSnaffleOrdenadasEntry.getValue());
+				// for (Entry<Integer, Double>
+				// distanciasConIdSnaffleOrdenadasEntry :
+				// distanciasConIdSnaffleOrdenadas
+				// .entrySet()) {
+				// if (i == 0) {
+				// idSnaffleMasCercana =
+				// distanciasConIdSnaffleOrdenadasEntry.getKey();
+				// System.err.println(
+				// "Snaffle más cercana con ID: " +
+				// distanciasConIdSnaffleOrdenadasEntry.getKey());
+				// System.err.println(
+				// "Snaffle más cercana está a: " +
+				// distanciasConIdSnaffleOrdenadasEntry.getValue());
+				//
+				// }
+				// System.err.println("Distancias ordenadas: " +
+				// distanciasConIdSnaffleOrdenadasEntry.getValue());
+				//
+				// }
 
-				}
+				int idSnaffleMasCercana = distanciasConIdSnaffleORDER.firstEntry().getKey();
+				System.err.println("Snaffle más cercana con ID: " + idSnaffleMasCercana);
+				System.err
+						.println("Snaffle más cercana está a: " + distanciasConIdSnaffleORDER.firstEntry().getValue());
+
 				Snaffle snaffleMasCercana = snaffles.get(idSnaffleMasCercana);
 
 				String movimiento = "";
@@ -246,10 +256,12 @@ class Player {
 	// return result;
 	// }
 
-	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
-		return map.entrySet().stream()
-				.sorted(Map.Entry
-						.comparingByValue(/* Collections.reverseOrder() */))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-	}
+	// public static <K, V extends Comparable<? super V>> Map<K, V>
+	// sortByValue(Map<K, V> map) {
+	// return map.entrySet().stream()
+	// .sorted(Map.Entry
+	// .comparingByValue(/* Collections.reverseOrder() */))
+	// .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,
+	// e2) -> e1, LinkedHashMap::new));
+	// }
 }

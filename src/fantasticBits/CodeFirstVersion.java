@@ -184,8 +184,16 @@ class Player {
 				int idSnaffleMasCercana = 0;
 				for (Entry<Integer, Double> distanciasConIdSnaffleOrdenadasEntry : distanciasConIdSnaffleOrdenadas
 						.entrySet()) {
-					idSnaffleMasCercana = distanciasConIdSnaffleOrdenadasEntry.getKey();
-					break;
+					if (i == 0) {
+						idSnaffleMasCercana = distanciasConIdSnaffleOrdenadasEntry.getKey();
+						System.err.println(
+								"Snaffle más cercana con ID: " + distanciasConIdSnaffleOrdenadasEntry.getKey());
+						System.err.println(
+								"Snaffle más cercana está a: " + distanciasConIdSnaffleOrdenadasEntry.getValue());
+
+					}
+					System.err.println("Distancias ordenadas: " + distanciasConIdSnaffleOrdenadasEntry.getValue());
+
 				}
 				Snaffle snaffleMasCercana = snaffles.get(idSnaffleMasCercana);
 

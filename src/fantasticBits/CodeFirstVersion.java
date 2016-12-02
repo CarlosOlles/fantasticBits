@@ -1,12 +1,12 @@
 package fantasticBits;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 class Entidad {
 	int id;
@@ -166,47 +166,33 @@ class Player {
 			System.err.println("Hay " + enemigos.size() + " enemigos");
 			System.err.println("Hay " + snaffles.size() + " snaffles");
 
+			Integer idSnaffleQuePersigo = null;
 			for (int i = 0; i < 2; i++) {
-
+				System.err.println("--------------------------");
 				Jugador jugador = jugadores.get(i);
 				Map<Integer, Double> distanciasConIdSnaffle = new HashMap<>();
-				TreeMap<Integer, Double> distanciasConIdSnaffleORDER = new TreeMap<>(Collections.reverseOrder());
 
 				for (Snaffle snaffle : snaffles) {
 					distanciasConIdSnaffle.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
-					distanciasConIdSnaffleORDER.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
+					distanciasConIdSnaffle.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
 				}
 
-				// TreeMap<Integer, Double> distanciasConIdSnaffleOrdenadas =
-				// sortByValue(distanciasConIdSnaffle);
+				distanciasConIdSnaffle = sortByValue(distanciasConIdSnaffle);
 
-				// for (Entry<Integer, Double>
-				// distanciasConIdSnaffleOrdenadasEntry :
-				// distanciasConIdSnaffleOrdenadas
-				// .entrySet()) {
-				// if (i == 0) {
-				// idSnaffleMasCercana =
-				// distanciasConIdSnaffleOrdenadasEntry.getKey();
-				// System.err.println(
-				// "Snaffle más cercana con ID: " +
-				// distanciasConIdSnaffleOrdenadasEntry.getKey());
-				// System.err.println(
-				// "Snaffle más cercana está a: " +
-				// distanciasConIdSnaffleOrdenadasEntry.getValue());
-				//
-				// }
-				// System.err.println("Distancias ordenadas: " +
-				// distanciasConIdSnaffleOrdenadasEntry.getValue());
-				//
-				// }
+				List<Integer> idSnafleOrderList = new ArrayList<>();
+				distanciasConIdSnaffle
+						.forEach((Integer, Double) -> System.err.println("Id: " + Integer + ": Distancia: " + Double));
+				distanciasConIdSnaffle.forEach((Integer, Double) -> idSnafleOrderList.add(Integer));
 
-				int idSnaffleMasCercana = distanciasConIdSnaffleORDER.firstEntry().getKey();
-				System.err.println("Snaffle más cercana con ID: " + idSnaffleMasCercana);
-				System.err
-						.println("Snaffle más cercana está a: " + distanciasConIdSnaffleORDER.firstEntry().getValue());
+				int idSnaffleMasCercana = 0;
+				if (idSnaffleQuePersigo == idSnafleOrderList.get(0)) {
+					idSnaffleMasCercana = idSnafleOrderList.get(0);
+				} else {
+					idSnaffleMasCercana = idSnafleOrderList.get(1);
+				}
 
 				Snaffle snaffleMasCercana = snaffles.get(idSnaffleMasCercana);
-
+				System.err.println("Voy a la snaffle con id" + idSnaffleMasCercana);
 				String movimiento = "";
 
 				if (jugador.getHasSnaffle() == 1) {
@@ -256,12 +242,10 @@ class Player {
 	// return result;
 	// }
 
-	// public static <K, V extends Comparable<? super V>> Map<K, V>
-	// sortByValue(Map<K, V> map) {
-	// return map.entrySet().stream()
-	// .sorted(Map.Entry
-	// .comparingByValue(/* Collections.reverseOrder() */))
-	// .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,
-	// e2) -> e1, LinkedHashMap::new));
-	// }
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+		return map.entrySet().stream()
+				.sorted(Map.Entry
+						.comparingByValue(/* Collections.reverseOrder() */))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+	}
 }

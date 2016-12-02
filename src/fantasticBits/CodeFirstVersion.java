@@ -1,7 +1,7 @@
 package fantasticBits;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +22,7 @@ class Entidad {
 		y = yE;
 		vx = vxE;
 		vy = vyE;
+
 	}
 
 	public int getId() {
@@ -84,8 +85,18 @@ class Jugador extends Entidad {
 }
 
 class Snaffle extends Entidad {
+	Double distance;
+
 	public Snaffle(int idE, int xE, int yE, int vxE, int vyE) {
 		super(idE, xE, yE, vxE, vyE);
+	}
+
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
 	}
 }
 
@@ -170,35 +181,32 @@ class Player {
 			for (int i = 0; i < 2; i++) {
 				System.err.println("--------------------------");
 				Jugador jugador = jugadores.get(i);
-				Map<Integer, Double> distanciasConIdSnaffle = new HashMap<>();
+				// Map<Integer, Double> distanciasConIdSnaffle = new
+				// HashMap<>();
 
 				for (Snaffle snaffle : snaffles) {
-					distanciasConIdSnaffle.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
-					distanciasConIdSnaffle.put(snaffle.getId(), calculateDistanceOfTwoEntities(jugador, snaffle));
+					// distanciasConIdSnaffle.put(snaffle.getId(),
+					// calculateDistanceOfTwoEntities(jugador, snaffle));
+					// distanciasConIdSnaffle.put(snaffle.getId(),
+					// calculateDistanceOfTwoEntities(jugador, snaffle));
+					snaffle.setDistance(calculateDistanceOfTwoEntities(jugador, snaffle));
 				}
+				Collections.sort(snaffles, (s1, s2) -> s1.distance.compareTo(s2.distance));
 
-				distanciasConIdSnaffle = sortByValue(distanciasConIdSnaffle);
+				// distanciasConIdSnaffle = sortByValue(distanciasConIdSnaffle);
 
-				List<Integer> idSnafleOrderList = new ArrayList<>();
-				distanciasConIdSnaffle
-						.forEach((Integer, Double) -> System.err.println("Id: " + Integer + ": Distancia: " + Double));
-				distanciasConIdSnaffle.forEach((Integer, Double) -> idSnafleOrderList.add(Integer));
+				// distanciasConIdSnaffle
+				// .forEach((Integer, Double) -> System.err.println("Id: " +
+				// Integer + ": Distancia: " + Double));
+				// distanciasConIdSnaffle.forEach((Integer, Double) ->
+				// idSnafleOrderList.add(Integer));
 
-				int idSnaffleMasCercana = 0;
-				if (idSnaffleQuePersigo == idSnafleOrderList.get(0)) {
-					idSnaffleMasCercana = idSnafleOrderList.get(0);
-				} else {
-					idSnaffleMasCercana = idSnafleOrderList.get(1);
-				}
-
-				Snaffle snaffleMasCercana = snaffles.get(idSnaffleMasCercana);
-				System.err.println("Voy a la snaffle con id" + idSnaffleMasCercana);
 				String movimiento = "";
 
 				if (jugador.getHasSnaffle() == 1) {
 					movimiento = "THROW " + centroPorteriaX + " " + centroPorteriaY + " " + potencia;
 				} else {
-					movimiento = "MOVE " + snaffleMasCercana.getX() + " " + snaffleMasCercana.getY() + " 150";
+					movimiento = "MOVE " + " 0 " + " " + " 0 " + " 150";
 				}
 
 				// Write an action using System.out.println()
